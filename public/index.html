@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Multiplayer Test</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    #circle { width: 100px; height: 100px; border-radius: 50%; background: red; margin: 20px auto; }
+  </style>
+</head>
+<body>
+  <h1>Multiplayer-dsfgdsfgdsfgTest</h1>
+  <div id="circle"></div>
+  <button id="toggle">🔴 Farbe ändern</button>
+
+  <script>
+  const socket = new WebSocket(`ws://${location.host}`);
+  const circle = document.getElementById('circle');
+  const button = document.getElementById('toggle');
+
+  let isRed = true;
+
+  socket.onopen = () => {
+    console.log('✅ WebSocket verbunden');
+  };
+
+  socket.onerror = (err) => {
+    console.error('❌ WebSocket Fehler:', err);
+  };
+
+  socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    console.log('📥 Nachricht empfangen:', data);
+
+    if (data.color) {
+      circle.style.backgroundColor = data.color;
+    }
+  };
+
+  button.addEventListener('click', () => {
+    isRed = !isRed;
+    const color = isRed ? 'red' : 'blue';
+    console.log('📤 Sende Farbe:', color);
+    socket.send(JSON.stringify({ color }));
+  });
+  </script>
+
+</body>
+</html>
