@@ -8,6 +8,9 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+const socket = new WebSocket('wss://multiplayerv1-production.up.railway.app');
+
+
 const indexPath = path.join(__dirname, 'public/index.html');
 
 app.use(express.static(path.join(__dirname, 'public')));
